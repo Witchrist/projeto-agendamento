@@ -22,6 +22,6 @@ public class TransferenciaFinanceiraController {
 
     @PostMapping
     public void criarTransferencia(@RequestBody TransferenciaFinanceiraDTO dto){
-
+        transfFinService.criarTransferencia(dto);
     }
 }

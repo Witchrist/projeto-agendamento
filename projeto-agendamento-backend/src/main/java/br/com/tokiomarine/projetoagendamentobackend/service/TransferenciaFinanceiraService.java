@@ -5,7 +5,6 @@ import br.com.tokiomarine.projetoagendamentobackend.model.entity.TransferenciaFi
 import br.com.tokiomarine.projetoagendamentobackend.repository.TransferenciaFinanceiraRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,8 +22,9 @@ public class TransferenciaFinanceiraService {
         return listaTransfDto;
     }
 
-    public void criarTransferencia(@RequestBody TransferenciaFinanceiraDTO dto){
-        
+    public void criarTransferencia(TransferenciaFinanceiraDTO dto){
+        TransferenciaFinanceira transf = dtoToBusiness(dto);
+        transfFinRepository.saveAndFlush(transf);
     }
 
     public TransferenciaFinanceira dtoToBusiness (TransferenciaFinanceiraDTO dto) {
