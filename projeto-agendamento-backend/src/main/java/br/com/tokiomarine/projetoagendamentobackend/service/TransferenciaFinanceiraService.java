@@ -89,7 +89,7 @@ public class TransferenciaFinanceiraService {
                 vlrTaxa = (vlrTransferencia*0.03)+3;
                 break;
             case "b":
-                vlrTaxa = 12;
+                vlrTaxa = 12.0;
                 break;
             case "c1":
                 vlrTaxa = (vlrTransferencia*0.082);
