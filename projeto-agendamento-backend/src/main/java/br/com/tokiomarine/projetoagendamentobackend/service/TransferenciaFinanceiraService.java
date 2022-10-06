@@ -6,6 +6,8 @@ import br.com.tokiomarine.projetoagendamentobackend.repository.TransferenciaFina
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -79,6 +81,7 @@ public class TransferenciaFinanceiraService {
     }
 
     public Double calcularTaxa(Double vlrTransferencia, String taxa ){
+
         Double vlrTaxa = 0.0; //formatar valor da taxa para duas casas decimais :)
 
         switch(taxa){
@@ -104,7 +107,9 @@ public class TransferenciaFinanceiraService {
                 break;
         }
 
-        vlrTaxa = Math.ceil(vlrTaxa);
+        BigDecimal bg = new BigDecimal(vlrTaxa).setScale(2, RoundingMode.CEILING);
+        vlrTaxa = bg.doubleValue();
+
         return vlrTaxa;
     }
 
