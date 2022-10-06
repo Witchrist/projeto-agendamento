@@ -6,6 +6,8 @@ import br.com.tokiomarine.projetoagendamentobackend.repository.TransferenciaFina
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -24,24 +26,35 @@ public class TransferenciaFinanceiraService {
         return listaTransfDto;
     }
 
-    public void criarTransferencia(TransferenciaFinanceiraDTO dto){
-        dto.setDtAgendamento(buscarDataHojeSemHoras());
+    public TransferenciaFinanceiraDTO criarTransferencia(TransferenciaFinanceiraDTO dto){
+        dto.setDtAgendamento(formatarDataParaString(new Date()));
         String tpTaxa = verificarTaxa(dto);
         Double vlrTaxa = calcularTaxa(dto.getVlrTransferencia(), tpTaxa);
         dto.setTaxa(vlrTaxa);
         TransferenciaFinanceira transf = dtoToBusiness(dto);
         transfFinRepository.saveAndFlush(transf);
+
+        return businessToDTO(transf);
     }
 
     public String verificarTaxa(TransferenciaFinanceiraDTO transfDto){
-        Date dtAgendamento = transfDto.getDtAgendamento();
-        Date dtTransferencia = transfDto.getDtTransferencia();
-        long qtDias = (dtTransferencia.getTime()-dtAgendamento.getTime())/86400000l;
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        long qtDias = 0;
+
+        try{
+            Date dtAgendamento = sdf.parse(transfDto.getDtAgendamento());
+            Date dtTransferencia = sdf.parse(transfDto.getDtTransferencia());
+            qtDias = (dtTransferencia.getTime()-dtAgendamento.getTime())/86400000l;
+        } catch (ParseException e){
+            e.printStackTrace();
+            return "";
+        }
+
 
         Double vlrTransferencia = transfDto.getVlrTransferencia();
 
         if(qtDias <= 10 && vlrTransferencia>2000){
-            return "";
+            return ""; //maior que 10 dias e menor que 2000 tambem nao se encaixa
         }
         if(qtDias == 0 && vlrTransferencia<=1000){
             return "a";
@@ -66,7 +79,7 @@ public class TransferenciaFinanceiraService {
     }
 
     public Double calcularTaxa(Double vlrTransferencia, String taxa ){
-        Double vlrTaxa = 0.0;
+        Double vlrTaxa = 0.0; //formatar valor da taxa para duas casas decimais :)
 
         switch(taxa){
             case "a":
@@ -90,33 +103,42 @@ public class TransferenciaFinanceiraService {
             default:
                 break;
         }
+
+        vlrTaxa = Math.ceil(vlrTaxa);
         return vlrTaxa;
     }
 
-    public Date buscarDataHojeSemHoras(){
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
+    public String formatarDataParaString(Date data){
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
-        return calendar.getTime();
+        return sdf.format(data);
+    }
+
+    public Date formatarStringParaData(String data){
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        try{
+            return sdf.parse(data);
+        } catch(ParseException e){
+            return null;
+        }
     }
 
     public TransferenciaFinanceira dtoToBusiness (TransferenciaFinanceiraDTO dto) {
+
         TransferenciaFinanceira transf = new TransferenciaFinanceira();
 
         transf.setContaOrigem(dto.getContaOrigem());
         transf.setContaDestino(dto.getContaDestino());
         transf.setVlrTransferencia(dto.getVlrTransferencia());
         transf.setTaxa(dto.getTaxa());
-        transf.setDtTransferencia(dto.getDtTransferencia());
-        transf.setDtAgendamento(dto.getDtAgendamento());
+        transf.setDtTransferencia(formatarStringParaData(dto.getDtTransferencia()));
+        transf.setDtAgendamento(formatarStringParaData(dto.getDtAgendamento()));
 
         return transf;
     }
 
     public TransferenciaFinanceiraDTO businessToDTO (TransferenciaFinanceira transf){
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         TransferenciaFinanceiraDTO dto = new TransferenciaFinanceiraDTO();
 
         dto.setIdTransferencia(transf.getIdTransferencia());
@@ -124,8 +146,8 @@ public class TransferenciaFinanceiraService {
         dto.setContaDestino(transf.getContaDestino());
         dto.setVlrTransferencia(transf.getVlrTransferencia());
         dto.setTaxa(transf.getTaxa());
-        dto.setDtTransferencia(transf.getDtTransferencia());
-        dto.setDtAgendamento(transf.getDtAgendamento());
+        dto.setDtTransferencia(formatarDataParaString(transf.getDtTransferencia()));
+        dto.setDtAgendamento(formatarDataParaString(transf.getDtAgendamento()));
 
         return dto;
     }

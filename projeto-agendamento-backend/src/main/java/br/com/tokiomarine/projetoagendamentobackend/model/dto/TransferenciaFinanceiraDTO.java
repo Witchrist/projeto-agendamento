@@ -12,6 +12,6 @@ public class TransferenciaFinanceiraDTO {
     private String contaDestino;
     private Double vlrTransferencia;
     private Double taxa;
-    private Date dtTransferencia;
-    private Date dtAgendamento;
+    private String dtTransferencia;
+    private String dtAgendamento;
 }
