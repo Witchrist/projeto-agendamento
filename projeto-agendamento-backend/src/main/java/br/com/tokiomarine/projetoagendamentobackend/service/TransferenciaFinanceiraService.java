@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -23,8 +25,82 @@ public class TransferenciaFinanceiraService {
     }
 
     public void criarTransferencia(TransferenciaFinanceiraDTO dto){
+        dto.setDtAgendamento(buscarDataHojeSemHoras());
+        String tpTaxa = verificarTaxa(dto);
+        Double vlrTaxa = calcularTaxa(dto.getVlrTransferencia(), tpTaxa);
+        dto.setTaxa(vlrTaxa);
         TransferenciaFinanceira transf = dtoToBusiness(dto);
         transfFinRepository.saveAndFlush(transf);
+    }
+
+    public String verificarTaxa(TransferenciaFinanceiraDTO transfDto){
+        Date dtAgendamento = transfDto.getDtAgendamento();
+        Date dtTransferencia = transfDto.getDtTransferencia();
+        long qtDias = (dtTransferencia.getTime()-dtAgendamento.getTime())/86400000l;
+
+        Double vlrTransferencia = transfDto.getVlrTransferencia();
+
+        if(qtDias <= 10 && vlrTransferencia>2000){
+            return "";
+        }
+        if(qtDias == 0 && vlrTransferencia<=1000){
+            return "a";
+        }
+        if(qtDias <= 10 && vlrTransferencia<=2000){
+            return "b";
+        }
+        if(qtDias <= 20 && vlrTransferencia>2000){
+            return "c1";
+        }
+        if(qtDias <= 30 && vlrTransferencia>2000){
+            return "c2";
+        }
+        if(qtDias <= 40 && vlrTransferencia>2000){
+            return "c3";
+        }
+        if(qtDias > 40 && vlrTransferencia>2000){
+            return "c4";
+        }
+
+        return "";
+    }
+
+    public Double calcularTaxa(Double vlrTransferencia, String taxa ){
+        Double vlrTaxa = 0.0;
+
+        switch(taxa){
+            case "a":
+                vlrTaxa = (vlrTransferencia*1.03)+3;
+                break;
+            case "b":
+                vlrTaxa = vlrTransferencia+12;
+                break;
+            case "c1":
+                vlrTaxa = (vlrTransferencia*1.082);
+                break;
+            case "c2":
+                vlrTaxa = (vlrTransferencia*1.069);
+                break;
+            case "c3":
+                vlrTaxa = (vlrTransferencia*1.047);
+                break;
+            case "c4":
+                vlrTaxa = (vlrTransferencia*1.017);
+                break;
+            default:
+                break;
+        }
+        return vlrTaxa;
+    }
+
+    public Date buscarDataHojeSemHoras(){
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
+        return calendar.getTime();
     }
 
     public TransferenciaFinanceira dtoToBusiness (TransferenciaFinanceiraDTO dto) {
