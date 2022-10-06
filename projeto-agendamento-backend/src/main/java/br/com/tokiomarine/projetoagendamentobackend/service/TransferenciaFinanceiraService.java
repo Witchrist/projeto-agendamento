@@ -86,22 +86,22 @@ public class TransferenciaFinanceiraService {
 
         switch(taxa){
             case "a":
-                vlrTaxa = (vlrTransferencia*1.03)+3;
+                vlrTaxa = (vlrTransferencia*0.03)+3;
                 break;
             case "b":
-                vlrTaxa = vlrTransferencia+12;
+                vlrTaxa = 12;
                 break;
             case "c1":
-                vlrTaxa = (vlrTransferencia*1.082);
+                vlrTaxa = (vlrTransferencia*0.082);
                 break;
             case "c2":
-                vlrTaxa = (vlrTransferencia*1.069);
+                vlrTaxa = (vlrTransferencia*0.069);
                 break;
             case "c3":
-                vlrTaxa = (vlrTransferencia*1.047);
+                vlrTaxa = (vlrTransferencia*0.047);
                 break;
             case "c4":
-                vlrTaxa = (vlrTransferencia*1.017);
+                vlrTaxa = (vlrTransferencia*0.017);
                 break;
             default:
                 break;
