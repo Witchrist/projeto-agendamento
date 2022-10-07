@@ -5,6 +5,7 @@ import br.com.tokiomarine.projetoagendamentobackend.service.TransferenciaFinance
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
 import java.util.List;
 
 @RestController
@@ -21,7 +22,7 @@ public class TransferenciaFinanceiraController {
     }
 
     @PostMapping
-    public void criarTransferencia(@RequestBody TransferenciaFinanceiraDTO dto){
-        transfFinService.criarTransferencia(dto);
+    public TransferenciaFinanceiraDTO criarTransferencia(@RequestBody TransferenciaFinanceiraDTO dto) throws Exception {
+        return transfFinService.criarTransferencia(dto);
     }
 }

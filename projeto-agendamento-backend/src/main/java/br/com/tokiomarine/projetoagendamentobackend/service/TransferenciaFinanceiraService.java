@@ -28,7 +28,7 @@ public class TransferenciaFinanceiraService {
         return listaTransfDto;
     }
 
-    public TransferenciaFinanceiraDTO criarTransferencia(TransferenciaFinanceiraDTO dto){
+    public TransferenciaFinanceiraDTO criarTransferencia(TransferenciaFinanceiraDTO dto) throws Exception{
         dto.setDtAgendamento(formatarDataParaString(new Date()));
         String tpTaxa = verificarTaxa(dto);
         Double vlrTaxa = calcularTaxa(dto.getVlrTransferencia(), tpTaxa);
@@ -39,24 +39,21 @@ public class TransferenciaFinanceiraService {
         return businessToDTO(transf);
     }
 
-    public String verificarTaxa(TransferenciaFinanceiraDTO transfDto){
+    public String verificarTaxa(TransferenciaFinanceiraDTO transfDto) throws Exception {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         long qtDias = 0;
 
-        try{
-            Date dtAgendamento = sdf.parse(transfDto.getDtAgendamento());
-            Date dtTransferencia = sdf.parse(transfDto.getDtTransferencia());
-            qtDias = (dtTransferencia.getTime()-dtAgendamento.getTime())/86400000l;
-        } catch (ParseException e){
-            e.printStackTrace();
-            return "";
-        }
+
+        Date dtAgendamento = sdf.parse(transfDto.getDtAgendamento());
+        Date dtTransferencia = sdf.parse(transfDto.getDtTransferencia());
+        qtDias = (dtTransferencia.getTime()-dtAgendamento.getTime())/86400000l;
+
 
 
         Double vlrTransferencia = transfDto.getVlrTransferencia();
 
         if(qtDias <= 10 && vlrTransferencia>2000){
-            return ""; //maior que 10 dias e menor que 2000 tambem nao se encaixa
+            throw new Exception();
         }
         if(qtDias == 0 && vlrTransferencia<=1000){
             return "a";
@@ -77,12 +74,12 @@ public class TransferenciaFinanceiraService {
             return "c4";
         }
 
-        return "";
+        throw new Exception();
     }
 
     public Double calcularTaxa(Double vlrTransferencia, String taxa ){
 
-        Double vlrTaxa = 0.0; //formatar valor da taxa para duas casas decimais :)
+        Double vlrTaxa = 0.0; 
 
         switch(taxa){
             case "a":
