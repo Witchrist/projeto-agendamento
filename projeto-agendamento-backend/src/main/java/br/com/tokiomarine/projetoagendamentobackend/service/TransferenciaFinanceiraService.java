@@ -11,7 +11,6 @@ import java.math.RoundingMode;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -43,17 +42,14 @@ public class TransferenciaFinanceiraService {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         long qtDias = 0;
 
-
         Date dtAgendamento = sdf.parse(transfDto.getDtAgendamento());
         Date dtTransferencia = sdf.parse(transfDto.getDtTransferencia());
         qtDias = (dtTransferencia.getTime()-dtAgendamento.getTime())/86400000l;
 
-
-
         Double vlrTransferencia = transfDto.getVlrTransferencia();
 
         if(qtDias <= 10 && vlrTransferencia>2000){
-            throw new Exception(); 
+            throw new Exception("Nao existe taxa aplicavel para essa transferencia");
         }
         if(qtDias == 0 && vlrTransferencia<=1000){
             return "a";
@@ -74,7 +70,7 @@ public class TransferenciaFinanceiraService {
             return "c4";
         }
 
-        throw new Exception();
+        throw new Exception("Nao existe taxa aplicavel para essa transferencia");
     }
 
     public Double calcularTaxa(Double vlrTransferencia, String taxa ){
