@@ -53,7 +53,7 @@ public class TransferenciaFinanceiraService {
         Double vlrTransferencia = transfDto.getVlrTransferencia();
 
         if(qtDias <= 10 && vlrTransferencia>2000){
-            throw new Exception();
+            throw new Exception(); 
         }
         if(qtDias == 0 && vlrTransferencia<=1000){
             return "a";
