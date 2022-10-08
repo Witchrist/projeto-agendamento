@@ -5,6 +5,9 @@
   Este projeto tem como objetivo calcular a taxa sobre uma transferência de valores, armazenar os dados referentes a essa transferência em um banco de dados e exibir todas as transferências agendadas. 
   </p>
   <p>
+    *Os dados são persistidos em banco de dados em memória, então ao encerrar ou reiniciar o servidor do back-end os dados serão apagados*
+  </p>
+  <p>
   A arquitetura escolhida para o desenvolvimento do projeto foi a MVC. Como o MVC permite a separação da aplicação em camadas, isso possibilita que o projeto fique mais escalável, trazendo ao projeto organização, segurança, reaproveitamento de código e facilidade na criação e manutenção de recursos. 
   </p>
   <br/>
