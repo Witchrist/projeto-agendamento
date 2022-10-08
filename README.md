@@ -22,6 +22,7 @@
     <li>TypeScript - Versão 4.7.4 </li>
   </ol>
   
+  <br/>
   <strong>Ferramentas: </strong>
   <p>
     Foram utilizadas as seguintes ferramentas no desenvolvimento do projeto:  
@@ -32,6 +33,7 @@
     <li>Visual Studio Code</li>
   </ol>
   
+  <br/>
   <strong>Deploy do Projeto:</strong>
   <p>
     Para realizar a subida do projeto, são necessárias duas etapas, realizar a subida do back-end e realizar a subida do front-end. 
