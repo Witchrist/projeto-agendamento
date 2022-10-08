@@ -1,0 +1,32 @@
+<form [formGroup]="agendamentoForm" (ngSubmit)="addTransferencia(agendamentoForm.value)">
+    <label for="contaOrigem">Conta Origem: </label>
+    <input id="contaOrigem" type="text" formControlName="contaOrigem">
+    <span *ngIf="agendamentoForm.get('contaOrigem')?.errors 
+    && (agendamentoForm.get('contaOrigem')?.touched && agendamentoForm.get('contaOrigem')?.dirty)">
+    Inserir Conta Origem</span>
+
+    <br/>
+    <label for="contaDestino">Conta Destino: </label>
+    <input id="contaDestino" type="text" formControlName="contaDestino">
+    <span *ngIf="agendamentoForm.get('contaDestino')?.errors 
+    && (agendamentoForm.get('contaDestino')?.touched && agendamentoForm.get('contaDestino')?.dirty)">
+    Inserir Conta Destino</span>
+
+    <br/>
+    <label for="vlrTransferencia">Valor da Transferência: </label>
+    <input id="vlrTransferencia" type="text" formControlName="vlrTransferencia">
+    <span *ngIf="agendamentoForm.get('vlrTransferencia')?.errors 
+    && (agendamentoForm.get('vlrTransferencia')?.touched && agendamentoForm.get('vlrTransferencia')?.dirty)">
+    Inserir Valor da Transferência</span>
+
+    <br/>
+    <label for="dtTransferencia">Data da Transferência: </label>
+    <input id="dtTransferencia" type="date" formControlName="dtTransferencia">
+    <span *ngIf="agendamentoForm.get('dtTransferencia')?.errors 
+    && (agendamentoForm.get('dtTransferencia')?.touched && agendamentoForm.get('dtTransferencia')?.dirty)">
+    Inserir Data da Transferência</span>
+    
+    <br/>
+    <button>ENVIAR</button>
+    <br/><br/>
+</form>
