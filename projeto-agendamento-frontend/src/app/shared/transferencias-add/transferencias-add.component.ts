@@ -1,6 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Transferencias } from 'src/app/module/transferencias';
 import { TransferenciasService } from 'src/app/services/transferencias.service';
 
@@ -18,7 +19,9 @@ export class TransferenciasAddComponent implements OnInit {
     dtTransferencia: ['', Validators.required]
   })
 
-  constructor(private formBuilder: FormBuilder, private transferenciasService: TransferenciasService) { }
+  constructor(private formBuilder: FormBuilder, 
+    private transferenciasService: TransferenciasService,
+    private router: Router) { }
 
   ngOnInit(): void {
   }
@@ -33,6 +36,7 @@ export class TransferenciasAddComponent implements OnInit {
       this.transferenciasService.addTransferencia(transferencia).subscribe({
         next: (response) => {
           console.log(response);
+          this.router.navigate(['transferencias-agendadas']);
         },
         error: (error) =>{
           alert(error.error);

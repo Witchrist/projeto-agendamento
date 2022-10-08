@@ -27,9 +27,12 @@
         && (agendamentoForm.get('dtTransferencia')?.touched && agendamentoForm.get('dtTransferencia')?.dirty)">
         Inserir Data da Transferência</span>
         
-        <br/>
-        <button>ENVIAR</button>
-        <br/><br/>
+        <div class="my-4">
+            <button class="mx-3">ENVIAR</button>
+            <a routerLink="/transferencias-agendadas"  class="mx-3">
+                <button>CONSULTAR AGENDAMENTOS</button>
+            </a>
+        </div>
     </form>
 </div>
 

@@ -6,6 +6,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { TransferenciasComponent } from './transferencias/transferencias.component';
 import { TransferenciasAddComponent } from './transferencias-add/transferencias-add.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { AppRoutingModule } from '../app-routing.module';
 
 
 
@@ -21,7 +22,8 @@ import { ReactiveFormsModule } from '@angular/forms';
   imports: [
     CommonModule,
     HttpClientModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    AppRoutingModule
   ]
 })
 export class SharedModule { }
