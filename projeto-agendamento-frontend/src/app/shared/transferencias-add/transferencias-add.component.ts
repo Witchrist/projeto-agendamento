@@ -12,9 +12,9 @@ import { TransferenciasService } from 'src/app/services/transferencias.service';
 export class TransferenciasAddComponent implements OnInit {
 
   public agendamentoForm: FormGroup = this.formBuilder.group({
-    contaOrigem: ['', Validators.required],
-    contaDestino: ['', Validators.required],
-    vlrTransferencia: ['', Validators.required],
+    contaOrigem: ['', [Validators.required, Validators.minLength(6), Validators.pattern('^[0-9]{6}$')]],
+    contaDestino: ['', [Validators.required, Validators.minLength(6), Validators.pattern('^[0-9]{6}$')]],
+    vlrTransferencia: ['', [Validators.required, Validators.pattern('^[0-9]*\,[0-9]{2}$')]],
     dtTransferencia: ['', Validators.required]
   })
 
@@ -26,11 +26,21 @@ export class TransferenciasAddComponent implements OnInit {
   public addTransferencia(transferencia: Transferencias){
     var datePipe = new DatePipe("en-US");
     transferencia.dtTransferencia = datePipe.transform(transferencia.dtTransferencia, 'dd/MM/yyyy');
+    var vlrFormat = transferencia.vlrTransferencia.toString().replace(',', '.');
+    transferencia.vlrTransferencia = parseFloat(vlrFormat);
 
-    console.log(transferencia);
-    this.transferenciasService.addTransferencia(transferencia).subscribe({
-      next: (response) => console.log(response),
-      error: (error) => console.log(error),
-  });
+    if(this.agendamentoForm.valid){
+      this.transferenciasService.addTransferencia(transferencia).subscribe({
+        next: (response) => {
+          console.log(response);
+        },
+        error: (error) =>{
+          alert(error.error);
+        },
+    });
+    } else {
+      alert("Por favor preencha corretamente todos os campos do formulário");
+    }
+    
   }
 }

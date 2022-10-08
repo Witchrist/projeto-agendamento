@@ -1,13 +1,13 @@
 <form [formGroup]="agendamentoForm" (ngSubmit)="addTransferencia(agendamentoForm.value)">
     <label for="contaOrigem">Conta Origem: </label>
-    <input id="contaOrigem" type="text" formControlName="contaOrigem">
+    <input id="contaOrigem" type="text" formControlName="contaOrigem" maxlength="6">
     <span *ngIf="agendamentoForm.get('contaOrigem')?.errors 
     && (agendamentoForm.get('contaOrigem')?.touched && agendamentoForm.get('contaOrigem')?.dirty)">
     Inserir Conta Origem</span>
 
     <br/>
     <label for="contaDestino">Conta Destino: </label>
-    <input id="contaDestino" type="text" formControlName="contaDestino">
+    <input id="contaDestino" type="text" formControlName="contaDestino" maxlength="6">
     <span *ngIf="agendamentoForm.get('contaDestino')?.errors 
     && (agendamentoForm.get('contaDestino')?.touched && agendamentoForm.get('contaDestino')?.dirty)">
     Inserir Conta Destino</span>
