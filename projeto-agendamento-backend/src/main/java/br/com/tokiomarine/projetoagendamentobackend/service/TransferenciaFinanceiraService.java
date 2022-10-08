@@ -1,5 +1,7 @@
 package br.com.tokiomarine.projetoagendamentobackend.service;
 
+import br.com.tokiomarine.projetoagendamentobackend.exception.TaxaAplicavelException;
+import br.com.tokiomarine.projetoagendamentobackend.exception.ValidacaoDataTransferenciaException;
 import br.com.tokiomarine.projetoagendamentobackend.model.dto.TransferenciaFinanceiraDTO;
 import br.com.tokiomarine.projetoagendamentobackend.model.entity.TransferenciaFinanceira;
 import br.com.tokiomarine.projetoagendamentobackend.repository.TransferenciaFinanceiraRepository;
@@ -20,6 +22,7 @@ public class TransferenciaFinanceiraService {
     @Autowired
     TransferenciaFinanceiraRepository transfFinRepository;
 
+    //Metodo que retorna a lista de todas as transferencias do banco de dados
     public List<TransferenciaFinanceiraDTO> buscarTransferencias(){
         List<TransferenciaFinanceira> listaTransf = transfFinRepository.findAll();
         List<TransferenciaFinanceiraDTO> listaTransfDto = listToDto(listaTransf);
@@ -27,17 +30,35 @@ public class TransferenciaFinanceiraService {
         return listaTransfDto;
     }
 
+    //Metodo para persistir uma transferencia no banco de dados
     public TransferenciaFinanceiraDTO criarTransferencia(TransferenciaFinanceiraDTO dto) throws Exception{
         dto.setDtAgendamento(formatarDataParaString(new Date()));
-        String tpTaxa = verificarTaxa(dto);
-        Double vlrTaxa = calcularTaxa(dto.getVlrTransferencia(), tpTaxa);
-        dto.setTaxa(vlrTaxa);
-        TransferenciaFinanceira transf = dtoToBusiness(dto);
-        transfFinRepository.saveAndFlush(transf);
-
-        return businessToDTO(transf);
+        if(validarDatasTransferenciaAgendamento(dto)){
+            String tpTaxa = verificarTaxa(dto);
+            Double vlrTaxa = calcularTaxa(dto.getVlrTransferencia(), tpTaxa);
+            dto.setTaxa(vlrTaxa);
+            TransferenciaFinanceira transf = dtoToBusiness(dto);
+            transfFinRepository.saveAndFlush(transf);
+            return businessToDTO(transf);
+        }
+        return null;
     }
 
+    //Metodo que verifica se a data de Transferencia esta igual ou acima da data de Agendamento
+    public Boolean validarDatasTransferenciaAgendamento(TransferenciaFinanceiraDTO dto) throws ValidacaoDataTransferenciaException{
+        Date dataAgendamento = formatarStringParaData(dto.getDtAgendamento());
+        Date dataTransferencia =formatarStringParaData(dto.getDtTransferencia());
+        long qtdDias = (dataTransferencia.getTime()-dataAgendamento.getTime())/86400000l;
+
+        if(qtdDias<0){
+            throw new ValidacaoDataTransferenciaException("Data da transferência não pode ser anterior ao dia de hoje");
+        }
+
+        return true;
+    }
+
+    //Método verifica a quantidade de dias e o valor da transferencia e retorna qual é o tipo de taxa para
+    //a transferencia
     public String verificarTaxa(TransferenciaFinanceiraDTO transfDto) throws Exception {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         long qtDias = 0;
@@ -49,7 +70,7 @@ public class TransferenciaFinanceiraService {
         Double vlrTransferencia = transfDto.getVlrTransferencia();
 
         if(qtDias <= 10 && vlrTransferencia>2000){
-            throw new Exception("Nao existe taxa aplicavel para essa transferencia");
+            throw new TaxaAplicavelException("Não existe taxa aplicável para essa transferência");
         }
         if(qtDias == 0 && vlrTransferencia<=1000){
             return "a";
@@ -70,9 +91,10 @@ public class TransferenciaFinanceiraService {
             return "c4";
         }
 
-        throw new Exception("Nao existe taxa aplicavel para essa transferencia");
+        throw new TaxaAplicavelException("Não existe taxa aplicável para essa transferência");
     }
 
+    //Metodo que calcula a taxa com base no tipo de taxa e valor da transferencia
     public Double calcularTaxa(Double vlrTransferencia, String taxa ){
 
         Double vlrTaxa = 0.0; 
@@ -106,12 +128,14 @@ public class TransferenciaFinanceiraService {
         return vlrTaxa;
     }
 
+    //Metodo para converter data para string
     public String formatarDataParaString(Date data){
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
         return sdf.format(data);
     }
 
+    //Metodo para converter string para data
     public Date formatarStringParaData(String data){
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         try{
@@ -121,6 +145,7 @@ public class TransferenciaFinanceiraService {
         }
     }
 
+    //Metodo para converter objeto dto para objeto business
     public TransferenciaFinanceira dtoToBusiness (TransferenciaFinanceiraDTO dto) {
 
         TransferenciaFinanceira transf = new TransferenciaFinanceira();
@@ -135,6 +160,7 @@ public class TransferenciaFinanceiraService {
         return transf;
     }
 
+    //Metodo para converter objeto business para objeto dto
     public TransferenciaFinanceiraDTO businessToDTO (TransferenciaFinanceira transf){
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         TransferenciaFinanceiraDTO dto = new TransferenciaFinanceiraDTO();
@@ -150,6 +176,7 @@ public class TransferenciaFinanceiraService {
         return dto;
     }
 
+    //Metodo que converte uma lista de objetos business para uma lista de objetos dto
     public List<TransferenciaFinanceiraDTO> listToDto(List<TransferenciaFinanceira> list) {
         List<TransferenciaFinanceiraDTO> listDTO = new ArrayList<TransferenciaFinanceiraDTO>();
 
