@@ -58,4 +58,4 @@
   
   
   ---------------
-  <p>Desenvolvido por: [Christopher Alexander](https://www.linkedin.com/in/christopher-alexander-70b6b1107/) </p>
+  Desenvolvido por: [Christopher Alexander](https://www.linkedin.com/in/christopher-alexander-70b6b1107/) 
