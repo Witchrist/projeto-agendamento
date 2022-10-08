@@ -14,7 +14,7 @@ export class TransferenciasAddComponent implements OnInit {
   public agendamentoForm: FormGroup = this.formBuilder.group({
     contaOrigem: ['', [Validators.required, Validators.minLength(6), Validators.pattern('^[0-9]{6}$')]],
     contaDestino: ['', [Validators.required, Validators.minLength(6), Validators.pattern('^[0-9]{6}$')]],
-    vlrTransferencia: ['', [Validators.required, Validators.pattern('^[0-9]*\,[0-9]{2}$')]],
+    vlrTransferencia: ['', [Validators.required, Validators.pattern('^\-?[0-9]+(?:\,[0-9]{1,2})?$')]],
     dtTransferencia: ['', Validators.required]
   })
 
