@@ -6,7 +6,7 @@
                 <input id="contaOrigem" type="text" formControlName="contaOrigem" maxlength="6">
                 <span *ngIf="agendamentoForm.get('contaOrigem')?.errors 
                 && (agendamentoForm.get('contaOrigem')?.touched && agendamentoForm.get('contaOrigem')?.dirty)">
-                Inserir Conta Origem</span>
+                Inserir Conta Origem. Ex: "123456"</span>
             </div>
         
             <div class="m-2 row justify-content-start ">
@@ -14,7 +14,7 @@
                 <input id="contaDestino" type="text" formControlName="contaDestino" maxlength="6">
                 <span *ngIf="agendamentoForm.get('contaDestino')?.errors 
                 && (agendamentoForm.get('contaDestino')?.touched && agendamentoForm.get('contaDestino')?.dirty)">
-                Inserir Conta Destino</span>
+                Inserir Conta Destino. Ex: "123456"</span>
             </div>
         
             <div class="m-2 row justify-content-start">
@@ -22,7 +22,7 @@
                 <input id="vlrTransferencia" type="text" formControlName="vlrTransferencia">
                 <span *ngIf="agendamentoForm.get('vlrTransferencia')?.errors 
                 && (agendamentoForm.get('vlrTransferencia')?.touched && agendamentoForm.get('vlrTransferencia')?.dirty)">
-                Inserir Valor da Transferência</span>
+                Inserir Valor da Transferência. Ex: "3500,50"</span>
             </div>
         
             <div class="m-2 row justify-content-start">
@@ -34,7 +34,7 @@
             </div>
             
             <div class="my-4 row justify-content-between">
-                <a routerLink="/transferencias-agendadas"  class="mx-2 col-3">
+                <a routerLink="/transferencias-agendadas"  class="p-0 mx-3 col-3">
                     <button>CONSULTAR AGENDAMENTOS</button>
                 </a>
                 <button class="mx-3 col-3">ENVIAR</button>
